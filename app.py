@@ -2,6 +2,7 @@ import streamlit as st
 import pickle
 import pandas as pd
 import requests
+import gdown
 
 
 
@@ -24,21 +25,8 @@ def fetch_poster(movie_id):
 
     except:
         return "https://via.placeholder.com/500"
-# @st.cache_data
-# def fetch_poster(movie_id):
-#     import requests
-    # api_key = 'https://api.themoviedb.org/3/movie/{}?api_key=65384d83a5affde18e307dd56035e762'
-    #
-    # url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key={api_key}"
-    # data = requests.get(url).json()
-    #
-    # poster_path = data['poster_path']
-    # return "https://image.tmdb.org/t/p/w500/" + poster_path
-# def fetch_poster(movie_id):
-#     response= requests.get('https://api.themoviedb.org/3/movie/{}?api_key=65384d83a5affde18e307dd56035e762'.format(movie_id))
-#     data = response.json()
-#
-#     return 'https://image.tmdb.org/t/p/w500/' + data['poster_path']
+
+
 
 def recommend(movie):
     movie_index = movies[movies['title'] == movie].index[0]
@@ -56,8 +44,16 @@ def recommend(movie):
     return recommended_movies,recommended_movies_posters
 
 
-movies = pickle.load(open('movies.pkl', 'rb'))
+import gdown
+import os
 
+if not os.path.exists('movies.pkl'):
+    gdown.download('https://drive.google.com/uc?id=1jKGH_SlldCLxBJGum7BaAXmV7W91RyW5', 'movies.pkl', quiet=False)
+
+if not os.path.exists('similarity.pkl'):
+    gdown.download('https://drive.google.com/uc?id=1zzHVolQWJZLX-VOfypX2ap6kZJMzPwXZ', 'similarity.pkl', quiet=False)
+
+movies = pickle.load(open('movies.pkl', 'rb'))
 similarity = pickle.load(open('similarity.pkl', 'rb'))
 
 st.title("Movie Recommender System")
